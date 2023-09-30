@@ -12,6 +12,13 @@ namespace Game.ActorModel.Actors
             _players = new Dictionary<string, IActorRef>();
 
             Receive<JoinGameMessage>(onJoinGame);
+
+            Receive<AttackPlayerMessage>(onAttackPlayer);
+        }
+
+        private void onAttackPlayer(AttackPlayerMessage message) 
+        {
+            _players[message.PlayerName].Forward(message);
         }
 
         private void onJoinGame(JoinGameMessage message)
