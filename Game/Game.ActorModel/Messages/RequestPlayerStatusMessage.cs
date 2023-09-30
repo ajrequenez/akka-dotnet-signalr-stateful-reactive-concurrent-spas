@@ -1,6 +1,6 @@
 ﻿namespace Game.ActorModel.Messages
 {
-    internal sealed class RefreshPlayerStatusMessage
+    public sealed class RequestPlayerStatusMessage
     {
     }
 }

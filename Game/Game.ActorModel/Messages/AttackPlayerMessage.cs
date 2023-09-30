@@ -1,6 +1,6 @@
 ﻿namespace Game.ActorModel.Messages
 {
-    internal sealed class AttackPlayerMessage
+    public sealed class AttackPlayerMessage
     {
         public string PlayerName { get; }
 
