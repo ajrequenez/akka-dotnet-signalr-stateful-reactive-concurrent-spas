@@ -21,7 +21,7 @@ namespace Game.ActorModel.Actors
 
         private void onAttackPlayer(AttackPlayerMessage message) 
         {
-            if(message.PlayerName.ToUpperInvariant() != _playerName) { return;  }
+            if(message.PlayerName.ToUpperInvariant() != _playerName.ToUpperInvariant()) { return;  }
 
             _health -= 20;
             Sender.Tell(new PlayerHealthChangedMessage(_playerName, _health));
