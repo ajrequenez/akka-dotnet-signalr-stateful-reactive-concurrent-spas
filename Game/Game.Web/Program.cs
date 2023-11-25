@@ -1,3 +1,6 @@
+using Akka.Hosting;
+using Game.ActorModel.Actors;
+
 namespace Game.Web
 {
     public class Program
@@ -8,6 +11,18 @@ namespace Game.Web
 
             // Add services to the container.
             builder.Services.AddControllersWithViews();
+
+            builder.Services.AddAkka("GameSystem", configurationBuilder =>
+            {
+                configurationBuilder.WithActors((sys, registry) =>
+                {
+                    var actor = sys.ActorOf(EchoActor.Props(), "echoActor");
+                    var gameController = sys.ActorOf(GameControllerActor.Props(), "gameController");
+
+                    registry.Register<EchoActor>(actor);
+                    registry.Register<GameControllerActor>(gameController);
+                });
+            });
 
             var app = builder.Build();
 

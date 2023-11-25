@@ -12,7 +12,7 @@ namespace Game.ActorModel.Actors
         public GameControllerActor()
         {
             _players = new Dictionary<string, IActorRef>();
-            _log.Info("GameControllerActor created...");
+            _log.Info("GameControllerActor: created");
 
             Receive<JoinGameMessage>(onJoinGame);
 
@@ -41,6 +41,18 @@ namespace Game.ActorModel.Actors
                     player.Tell(new RequestPlayerStatusMessage(), Sender);
                 }
             }
+        }
+
+        protected override void PreStart()
+        {
+            _log.Info("GameControllerActor: starting");
+            base.PreStart();
+        }
+
+        protected override void PostStop()
+        {
+            _log.Info("GameControllerActor: stopped");
+            base.PostStop();
         }
 
         public static Props Props() => Akka.Actor.Props.Create(()=> new GameControllerActor());
