@@ -29,7 +29,9 @@ namespace Game.ActorModel.Actors
         {
             var playerName = message.PlayerName;
 
-            _log.Info($"New player joining game...{0}", playerName);
+            _log.Info("Player joining Game:");
+            _log.Info(playerName);
+            _log.Info($"New player joining game...{playerName}");
 
             if(!_players.ContainsKey(playerName))
             {

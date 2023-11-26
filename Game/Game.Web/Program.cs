@@ -1,5 +1,8 @@
+using Akka.DependencyInjection;
 using Akka.Hosting;
 using Game.ActorModel.Actors;
+using Game.Web.Hubs;
+using System.Diagnostics;
 
 namespace Game.Web
 {
@@ -11,6 +14,8 @@ namespace Game.Web
 
             // Add services to the container.
             builder.Services.AddControllersWithViews();
+            builder.Services.AddSignalR();
+            builder.Services.AddSingleton<GameHubHelper, GameHubHelper>();
 
             builder.Services.AddAkka("GameSystem", configurationBuilder =>
             {
@@ -21,6 +26,11 @@ namespace Game.Web
 
                     registry.Register<EchoActor>(actor);
                     registry.Register<GameControllerActor>(gameController);
+
+                    var signalRProps = DependencyResolver.For(sys).Props<SignalRActor>(gameController);
+                    var signalRActor = sys.ActorOf(signalRProps, "signalr");
+
+                    registry.Register<SignalRActor>(signalRActor);
                 });
             });
 
@@ -41,9 +51,14 @@ namespace Game.Web
 
             app.UseAuthorization();
 
-            app.MapControllerRoute(
-                name: "default",
-                pattern: "{controller=Home}/{action=Index}/{id?}");
+            app.UseEndpoints(endpoints =>
+            {
+                endpoints.MapControllerRoute(
+                    name: "default",
+                    pattern: "{controller=Home}/{action=Index}/{id?}");
+                endpoints.MapHub<GameHub>("/gameHub");
+            });
+            
 
             app.Run();
         }
